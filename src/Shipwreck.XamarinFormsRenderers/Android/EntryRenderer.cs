@@ -362,7 +362,7 @@ public abstract partial class EntryRendererBase<TControl> : ViewRenderer<Entry, 
         var keyboard = model.Keyboard;
 
         EditText.InputType = keyboard.ToInputType();
-        if (!(keyboard is Internals.CustomKeyboard))
+        if (!(keyboard is CustomKeyboard))
         {
             if (model.IsSet(InputView.IsSpellCheckEnabledProperty))
             {
@@ -484,7 +484,7 @@ public abstract partial class EntryRendererBase<TControl> : ViewRenderer<Entry, 
             }
             catch (System.Exception ex)
             {
-                Internals.Log.Warning("Entry", $"Failed to set Control.Selection from CursorPosition/SelectionLength: {ex}");
+                System.Diagnostics.Debug.WriteLine(  $"Failed to set Control.Selection from CursorPosition/SelectionLength: {ex}");
             }
             finally
             {
@@ -531,7 +531,7 @@ public abstract partial class EntryRendererBase<TControl> : ViewRenderer<Entry, 
         }
         catch (System.Exception ex)
         {
-            Internals.Log.Warning("Entry", $"Failed to set CursorPosition from renderer: {ex}");
+            System.Diagnostics.Debug.WriteLine($"Failed to set CursorPosition from renderer: {ex}");
         }
         finally
         {
@@ -548,7 +548,7 @@ public abstract partial class EntryRendererBase<TControl> : ViewRenderer<Entry, 
         }
         catch (System.Exception ex)
         {
-            Internals.Log.Warning("Entry", $"Failed to set SelectionLength from renderer: {ex}");
+            System.Diagnostics.Debug.WriteLine($"Failed to set SelectionLength from renderer: {ex}");
         }
         finally
         {
