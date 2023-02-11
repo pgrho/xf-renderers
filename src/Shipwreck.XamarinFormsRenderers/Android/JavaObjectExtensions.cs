@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Shipwreck.XamarinFormsRenderers.Android;
+﻿namespace Shipwreck.XamarinFormsRenderers.Android;
 
 internal static class JavaObjectExtensions
 {
@@ -12,7 +10,9 @@ internal static class JavaObjectExtensions
     public static bool IsAlive(this Java.Lang.Object obj)
     {
         if (obj == null)
+        {
             return false;
+        }
 
         return !obj.IsDisposed();
     }
@@ -25,7 +25,9 @@ internal static class JavaObjectExtensions
     public static bool IsAlive(this global::Android.Runtime.IJavaObject obj)
     {
         if (obj == null)
+        {
             return false;
+        }
 
         return !obj.IsDisposed();
     }

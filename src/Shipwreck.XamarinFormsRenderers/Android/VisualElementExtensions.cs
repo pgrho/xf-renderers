@@ -1,6 +1,4 @@
-﻿using System;
-using Xamarin.Forms.Internals;
-using Xamarin.Forms.Platform.Android;
+﻿using Xamarin.Forms.Platform.Android;
 using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
 using VisualElement = Xamarin.Forms.VisualElement;
 

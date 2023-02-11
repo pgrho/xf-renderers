@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Diagnostics;
 using Android.Graphics;
-using Xamarin.Forms.Core;
-using Xamarin.Forms.Internals;
 using AApplication = Android.App.Application;
 
 namespace Shipwreck.XamarinFormsRenderers.Android;
@@ -17,7 +14,9 @@ internal static class FontExtensions
     public static float ToScaledPixel(this Font self)
     {
         if (self.IsDefault)
+        {
             return 14;
+        }
 
         if (self.UseNamedSize)
         {
@@ -62,7 +61,9 @@ internal static class FontExtensions
         //First check Alias
         var (hasFontAlias, fontPostScriptName) = FontRegistrar.HasFont(fontName);
         if (hasFontAlias)
+        {
             return (true, Typeface.CreateFromFile(fontPostScriptName));
+        }
 
         var isAssetFont = IsAssetFontFamily(fontName);
         if (isAssetFont)
@@ -105,7 +106,9 @@ internal static class FontExtensions
                     formated = $"{folder}{fontFile.FileNameWithExtension()}#{fontFile.PostScriptName}";
                     var result = LoadTypefaceFromAsset(formated);
                     if (result.success)
+                    {
                         return result;
+                    }
                 }
 
             }
@@ -131,7 +134,9 @@ internal static class FontExtensions
     public static Typeface ToTypeface(this Font self)
     {
         if (self.IsDefault || (self.FontAttributes == FontAttributes.None && string.IsNullOrEmpty(self.FontFamily)))
+        {
             return s_defaultTypeface ?? (s_defaultTypeface = Typeface.Default);
+        }
 
         return ToTypeface(self.FontFamily, self.FontAttributes);
     }
@@ -149,7 +154,9 @@ internal static class FontExtensions
     internal static Typeface ToTypeface(this IFontElement self)
     {
         if (self.IsDefault())
+        {
             return s_defaultTypeface ?? (s_defaultTypeface = Typeface.Default);
+        }
 
         return ToTypeface(self.FontFamily, self.FontAttributes);
     }
@@ -188,11 +195,18 @@ internal static class FontExtensions
     {
         var style = TypefaceStyle.Normal;
         if ((attrs & (FontAttributes.Bold | FontAttributes.Italic)) == (FontAttributes.Bold | FontAttributes.Italic))
+        {
             style = TypefaceStyle.BoldItalic;
+        }
         else if ((attrs & FontAttributes.Bold) != 0)
+        {
             style = TypefaceStyle.Bold;
+        }
         else if ((attrs & FontAttributes.Italic) != 0)
+        {
             style = TypefaceStyle.Italic;
+        }
+
         return style;
     }
 
@@ -201,7 +215,9 @@ internal static class FontExtensions
         fontFamily = fontFamily ?? String.Empty;
         int hashtagIndex = fontFamily.IndexOf('#');
         if (hashtagIndex >= 0)
+        {
             return fontFamily.Substring(0, hashtagIndex);
+        }
 
         throw new InvalidOperationException($"Can't parse the {nameof(fontFamily)} {fontFamily}");
     }

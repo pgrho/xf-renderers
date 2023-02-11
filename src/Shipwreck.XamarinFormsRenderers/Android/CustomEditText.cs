@@ -1,11 +1,6 @@
-﻿using System;
-using System.ComponentModel;
-using Android.Content;
+﻿using Android.Content;
 using Android.Views;
-using Android.Widget;
-using AndroidX.Core.Graphics.Drawable;
 using Xamarin.Forms.Platform.Android;
-using ARect = Android.Graphics.Rect;
 
 namespace Shipwreck.XamarinFormsRenderers.Android;
 

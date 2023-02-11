@@ -1,5 +1,4 @@
-﻿using System;
-using Android.Content.Res;
+﻿using Android.Content.Res;
 using Android.Widget;
 using Xamarin.Forms.Platform.Android;
 
@@ -26,7 +25,9 @@ internal class TextColorSwitcher
     public void UpdateTextColor(TextView control, Color color, Action<ColorStateList> setColor = null)
     {
         if (color == _currentTextColor)
+        {
             return;
+        }
 
         if (setColor == null)
         {

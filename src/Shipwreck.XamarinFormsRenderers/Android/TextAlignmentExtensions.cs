@@ -10,9 +10,13 @@ internal static class TextAlignmentExtensions
     internal static void UpdateHorizontalAlignment(this EditText view, TextAlignment alignment, bool hasRtlSupport, AGravityFlags orMask = AGravityFlags.NoGravity)
     {
         if ((int)Build.VERSION.SdkInt < 17 || !hasRtlSupport)
+        {
             view.Gravity = alignment.ToHorizontalGravityFlags() | orMask;
+        }
         else
+        {
             view.TextAlignment = alignment.ToTextAlignment();
+        }
     }
 
     internal static void UpdateVerticalAlignment(this EditText view, TextAlignment alignment, AGravityFlags orMask = AGravityFlags.NoGravity)

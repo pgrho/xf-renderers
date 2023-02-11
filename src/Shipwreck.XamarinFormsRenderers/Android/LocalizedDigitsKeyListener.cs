@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Android.Text;
+﻿using Android.Text;
 using Android.Text.Method;
 using Java.Lang;
 using Java.Text;
