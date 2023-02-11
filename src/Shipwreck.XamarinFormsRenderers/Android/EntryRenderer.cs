@@ -427,7 +427,7 @@ public abstract partial class EntryRendererBase<TControl> : ViewRenderer<Entry, 
 
     void UpdateCharacterSpacing()
     {
-        if (Forms.IsLollipopOrNewer)
+        if (global::Android.OS.Build.VERSION.SdkInt >= global::Android.OS.BuildVersionCodes.Lollipop)
         {
             EditText.LetterSpacing = Element.CharacterSpacing.ToEm();
         }
