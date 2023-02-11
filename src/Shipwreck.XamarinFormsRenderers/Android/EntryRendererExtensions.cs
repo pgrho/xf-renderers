@@ -1,62 +1,78 @@
 ﻿using Android.Views.InputMethods;
+using ImeFlags = Xamarin.Forms.PlatformConfiguration.AndroidSpecific.ImeFlags;
 
-namespace Xamarin.Forms.Platform.Android
+namespace Shipwreck.XamarinFormsRenderers.Android;
+
+internal static class EntryRendererExtensions
 {
-    internal static class EntryRendererExtensions
+    internal static ImeAction ToAndroidImeAction(this ReturnType returnType)
     {
-
-        internal static ImeAction ToAndroidImeAction(this ReturnType returnType)
+        switch (returnType)
         {
-            switch (returnType)
-            {
-                case ReturnType.Go:
-                    return ImeAction.Go;
-                case ReturnType.Next:
-                    return ImeAction.Next;
-                case ReturnType.Send:
-                    return ImeAction.Send;
-                case ReturnType.Search:
-                    return ImeAction.Search;
-                case ReturnType.Done:
-                    return ImeAction.Done;
-                case ReturnType.Default:
-                    return ImeAction.Done;
-                default:
-                    throw new System.NotImplementedException($"ReturnType {returnType} not supported");
-            }
+            case ReturnType.Go:
+                return ImeAction.Go;
+
+            case ReturnType.Next:
+                return ImeAction.Next;
+
+            case ReturnType.Send:
+                return ImeAction.Send;
+
+            case ReturnType.Search:
+                return ImeAction.Search;
+
+            case ReturnType.Done:
+                return ImeAction.Done;
+
+            case ReturnType.Default:
+                return ImeAction.Done;
+
+            default:
+                throw new System.NotImplementedException($"ReturnType {returnType} not supported");
         }
+    }
 
-        public static ImeAction ToAndroidImeOptions(this PlatformConfiguration.AndroidSpecific.ImeFlags flags)
+    public static ImeAction ToAndroidImeOptions(this ImeFlags flags)
+    {
+        switch (flags)
         {
-            switch (flags)
-            {
-                case PlatformConfiguration.AndroidSpecific.ImeFlags.Previous:
-                    return ImeAction.Previous;
-                case PlatformConfiguration.AndroidSpecific.ImeFlags.Next:
-                    return ImeAction.Next;
-                case PlatformConfiguration.AndroidSpecific.ImeFlags.Search:
-                    return ImeAction.Search;
-                case PlatformConfiguration.AndroidSpecific.ImeFlags.Send:
-                    return ImeAction.Send;
-                case PlatformConfiguration.AndroidSpecific.ImeFlags.Go:
-                    return ImeAction.Go;
-                case PlatformConfiguration.AndroidSpecific.ImeFlags.None:
-                    return ImeAction.None;
-                case PlatformConfiguration.AndroidSpecific.ImeFlags.ImeMaskAction:
-                    return ImeAction.ImeMaskAction;
-                case PlatformConfiguration.AndroidSpecific.ImeFlags.NoPersonalizedLearning:
-                    return (ImeAction)ImeFlags.NoPersonalizedLearning;
-                case PlatformConfiguration.AndroidSpecific.ImeFlags.NoExtractUi:
-                    return (ImeAction)ImeFlags.NoExtractUi;
-                case PlatformConfiguration.AndroidSpecific.ImeFlags.NoAccessoryAction:
-                    return (ImeAction)ImeFlags.NoAccessoryAction;
-                case PlatformConfiguration.AndroidSpecific.ImeFlags.NoFullscreen:
-                    return (ImeAction)ImeFlags.NoFullscreen;
-                case PlatformConfiguration.AndroidSpecific.ImeFlags.Default:
-                case PlatformConfiguration.AndroidSpecific.ImeFlags.Done:
-                default:
-                    return ImeAction.Done;
-            }
+            case ImeFlags.Previous:
+                return ImeAction.Previous;
+
+            case ImeFlags.Next:
+                return ImeAction.Next;
+
+            case ImeFlags.Search:
+                return ImeAction.Search;
+
+            case ImeFlags.Send:
+                return ImeAction.Send;
+
+            case ImeFlags.Go:
+                return ImeAction.Go;
+
+            case ImeFlags.None:
+                return ImeAction.None;
+
+            case ImeFlags.ImeMaskAction:
+                return ImeAction.ImeMaskAction;
+
+            case ImeFlags.NoPersonalizedLearning:
+                return (ImeAction)ImeFlags.NoPersonalizedLearning;
+
+            case ImeFlags.NoExtractUi:
+                return (ImeAction)ImeFlags.NoExtractUi;
+
+            case ImeFlags.NoAccessoryAction:
+                return (ImeAction)ImeFlags.NoAccessoryAction;
+
+            case ImeFlags.NoFullscreen:
+                return (ImeAction)ImeFlags.NoFullscreen;
+
+            case ImeFlags.Default:
+            case ImeFlags.Done:
+            default:
+                return ImeAction.Done;
         }
     }
 }

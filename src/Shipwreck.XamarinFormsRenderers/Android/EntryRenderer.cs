@@ -14,6 +14,7 @@ using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
 using Color = Xamarin.Forms.Color;
 using Entry = Xamarin.Forms.Entry;
 using VisualElement = Xamarin.Forms.VisualElement;
+using Android = Android;
 
 namespace Shipwreck.XamarinFormsRenderers.Android;
 
@@ -675,7 +676,9 @@ public abstract partial class EntryRendererBase<TControl> : ViewRenderer<Entry, 
         Drawable d = showClearButton && (Element.Text?.Length > 0) ? GetCloseButtonDrawable() : null;
 
         if (!Element.TextColor.IsDefault)
-            d?.SetColorFilter(Element.TextColor.ToAndroid(), FilterMode.SrcIn);
+#pragma warning disable CS0618 // 型またはメンバーが旧型式です
+            d?.SetColorFilter(Element.TextColor.ToAndroid(), global::Android.Graphics.PorterDuff.Mode.SrcIn);
+#pragma warning restore CS0618 // 型またはメンバーが旧型式です
         else
             d?.ClearColorFilter();
 

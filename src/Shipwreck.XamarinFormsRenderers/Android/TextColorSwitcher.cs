@@ -1,6 +1,7 @@
 ﻿using System;
 using Android.Content.Res;
 using Android.Widget;
+using Xamarin.Forms.Platform.Android;
 
 namespace Shipwreck.XamarinFormsRenderers.Android;
 
