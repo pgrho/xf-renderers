@@ -14,4 +14,9 @@ public abstract class PageViewModel : ObservableObject
 
     public Task NavigateAsync(Page newPage)
         => Page.Navigation.PushAsync(newPage);
+
+    private Command _PopCommand;
+
+    public Command PopCommand
+        => _PopCommand ??= new(() => Page.Navigation.PopAsync());
 }

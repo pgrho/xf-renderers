@@ -2,16 +2,64 @@
 <ContentPage
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:xfr="http://schema.shipwreck.jp/xf-renderers/"
     xmlns:local="clr-namespace:Shipwreck.XamarinFormsRenderers.Demo"
     x:Class="Shipwreck.XamarinFormsRenderers.Demo.ExtendedEntryPage"
     x:DataType="{x:Type local:ExtendedEntryPageViewModel}"
     Title="ExtendedEntry">
-    <ContentPage.Content>
+    <ScrollView>
         <StackLayout>
-            <Label
-                Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand"
-                HorizontalOptions="CenterAndExpand" />
+            <xfr:ExtendedEntry
+                x:Name="target"
+                FontSize="Large"
+                Text="{Binding Text}"
+                Placeholder="{Binding Placeholder}"
+                IsSoftwareKeyboardEnabled="{Binding IsSoftwareKeyboardEnabled}"
+                SelectAllOnFocus="{Binding SelectAllOnFocus}"
+                ReturnCommand="{Binding PopCommand}" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition
+                        Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Label
+                    Text="Text" />
+                <Entry
+                    Grid.Column="1"
+                    Text="{Binding Text}" />
+                <Label
+                    Grid.Row="1"
+                    Text="Placeholder" />
+                <Entry
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Text="{Binding Placeholder}" />
+                <Label
+                    Grid.Row="2"
+                    Text="IsSoftwareKeyboardEnabled" />
+                <Switch
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    IsToggled="{Binding IsSoftwareKeyboardEnabled}" />
+                <Label
+                    Grid.Row="3"
+                    Text="SelectAllOnFocus" />
+                <Switch
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    IsToggled="{Binding SelectAllOnFocus}" />
+            </Grid>
+
+            <Button
+                Text="Focus"
+                Command="{Binding FocusCommand}" />
         </StackLayout>
-    </ContentPage.Content>
+    </ScrollView>
 </ContentPage>

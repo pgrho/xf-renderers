@@ -11,4 +11,7 @@ public partial class ExtendedEntryPage : ContentPage
         InitializeComponent();
         BindingContext = new ExtendedEntryPageViewModel(this);
     }
+
+    internal void FocusTarget()
+        => target.Focus();
 }
