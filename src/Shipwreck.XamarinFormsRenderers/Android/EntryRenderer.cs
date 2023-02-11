@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
+﻿using System.ComponentModel;
 using Android.Content;
-using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.Text;
 using Android.Text.Method;
@@ -250,50 +246,76 @@ public abstract partial class EntryRendererBase<TControl> : ViewRenderer<Entry, 
             return;
         }
 
-        if (e.PropertyName == Entry.PlaceholderProperty.PropertyName)
-            UpdatePlaceHolderText();
-        else if (e.PropertyName == Entry.IsPasswordProperty.PropertyName)
-            UpdateInputType();
-        else if (e.IsOneOf(Entry.TextProperty, Entry.TextTransformProperty))
-            UpdateText();
-        else if (e.PropertyName == Entry.TextColorProperty.PropertyName)
-            UpdateColor();
-        else if (e.PropertyName == InputView.KeyboardProperty.PropertyName)
-            UpdateInputType();
-        else if (e.PropertyName == InputView.IsSpellCheckEnabledProperty.PropertyName)
-            UpdateInputType();
-        else if (e.PropertyName == Entry.IsTextPredictionEnabledProperty.PropertyName)
-            UpdateInputType();
-        else if (e.PropertyName == Entry.HorizontalTextAlignmentProperty.PropertyName)
-            UpdateHorizontalTextAlignment();
-        else if (e.PropertyName == Entry.VerticalTextAlignmentProperty.PropertyName)
-            UpdateVerticalTextAlignment();
-        else if (e.PropertyName == Entry.CharacterSpacingProperty.PropertyName)
-            UpdateCharacterSpacing();
-        else if (e.PropertyName == Entry.FontAttributesProperty.PropertyName)
-            UpdateFont();
-        else if (e.PropertyName == Entry.FontFamilyProperty.PropertyName)
-            UpdateFont();
-        else if (e.PropertyName == Entry.FontSizeProperty.PropertyName)
-            UpdateFont();
-        else if (e.PropertyName == Entry.PlaceholderColorProperty.PropertyName)
-            UpdatePlaceholderColor();
-        else if (e.PropertyName == VisualElement.FlowDirectionProperty.PropertyName)
-            UpdateHorizontalTextAlignment();
-        else if (e.PropertyName == InputView.MaxLengthProperty.PropertyName)
-            UpdateMaxLength();
-        else if (e.PropertyName == PlatformConfiguration.AndroidSpecific.Entry.ImeOptionsProperty.PropertyName)
-            UpdateImeOptions();
-        else if (e.PropertyName == Entry.ReturnTypeProperty.PropertyName)
-            UpdateReturnType();
-        else if (e.PropertyName == Entry.SelectionLengthProperty.PropertyName)
-            UpdateCursorSelection();
-        else if (e.PropertyName == Entry.CursorPositionProperty.PropertyName)
-            UpdateCursorSelection();
-        else if (e.PropertyName == InputView.IsReadOnlyProperty.PropertyName)
-            UpdateIsReadOnly();
-        if (e.PropertyName == Entry.ClearButtonVisibilityProperty.PropertyName)
-            UpdateClearBtnOnPropertyChanged();
+        switch (e.PropertyName)
+        {
+            case nameof(Element.Placeholder):
+                UpdatePlaceHolderText();
+                break;
+
+            case nameof(Element.Keyboard):
+            case nameof(Element.IsPassword):
+            case nameof(Element.IsSpellCheckEnabled):
+            case nameof(Element.IsTextPredictionEnabled):
+                UpdateInputType();
+                break;
+
+            case nameof(Element.Text):
+            case nameof(Element.TextTransform):
+                UpdateText();
+                break;
+
+            case nameof(Element.TextColor):
+                UpdateColor();
+                break;
+
+            case nameof(Element.HorizontalTextAlignment):
+            case nameof(Element.FlowDirection):
+                UpdateHorizontalTextAlignment();
+                break;
+
+            case nameof(Element.VerticalTextAlignment):
+                UpdateVerticalTextAlignment();
+                break;
+
+            case nameof(Element.CharacterSpacing):
+                UpdateCharacterSpacing();
+                break;
+
+            case nameof(Element.FontAttributes):
+            case nameof(Element.FontFamily):
+            case nameof(Element.FontSize):
+                UpdateFont();
+                break;
+
+            case nameof(Element.PlaceholderColor):
+                UpdatePlaceholderColor();
+                break;
+
+            case nameof(Element.MaxLength):
+                UpdateMaxLength();
+                break;
+
+            case nameof(Element.ReturnType):
+                UpdateReturnType();
+                break;
+
+            case nameof(Element.SelectionLength):
+            case nameof(Element.CursorPosition):
+                UpdateCursorSelection();
+                break;
+
+            case nameof(Element.IsReadOnly):
+                UpdateIsReadOnly();
+                break;
+
+            case nameof(Element.ClearButtonVisibility):
+                UpdateClearBtnOnPropertyChanged();
+                break;
+
+            case nameof(Xamarin.Forms.PlatformConfiguration.AndroidSpecific.Entry.ImeOptions):
+                UpdateImeOptions();
+                break;
+        }
 
         base.OnElementPropertyChanged(sender, e);
     }
@@ -649,7 +671,6 @@ public abstract partial class EntryRendererBase<TControl>
             d?.SetColorFilter(Element.TextColor.ToAndroid(), FilterMode.SrcIn);
         else
             d?.ClearColorFilter();
-
 
         if ((Element as IVisualElementController).EffectiveFlowDirection.IsRightToLeft())
         {
