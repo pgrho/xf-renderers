@@ -4,212 +4,211 @@ using Android.Text.Method;
 using Java.Lang;
 using Java.Text;
 
-namespace Xamarin.Forms.Platform.Android
+namespace Shipwreck.XamarinFormsRenderers.Android;
+
+internal class LocalizedDigitsKeyListener : NumberKeyListener
 {
-    internal class LocalizedDigitsKeyListener : NumberKeyListener
+    readonly char _decimalSeparator;
+
+    // I'm not aware of a situation/locale where this would need to be something different, 
+    // but we'll make it easy to localize the sign in the future just in case
+    const char SignCharacter = '-';
+
+    static Dictionary<char, LocalizedDigitsKeyListener> s_unsignedCache;
+    static Dictionary<char, LocalizedDigitsKeyListener> s_signedCache;
+
+    static char GetDecimalSeparator()
     {
-        readonly char _decimalSeparator;
-
-        // I'm not aware of a situation/locale where this would need to be something different, 
-        // but we'll make it easy to localize the sign in the future just in case
-        const char SignCharacter = '-';
-
-        static Dictionary<char, LocalizedDigitsKeyListener> s_unsignedCache;
-        static Dictionary<char, LocalizedDigitsKeyListener> s_signedCache;
-
-        static char GetDecimalSeparator()
+        var format = NumberFormat.Instance as DecimalFormat;
+        if (format == null)
         {
-            var format = NumberFormat.Instance as DecimalFormat;
-            if (format == null)
-            {
-                return '.';
-            }
-
-            DecimalFormatSymbols sym = format.DecimalFormatSymbols;
-            return sym.DecimalSeparator;
+            return '.';
         }
 
-        public static NumberKeyListener Create(InputTypes inputTypes)
+        DecimalFormatSymbols sym = format.DecimalFormatSymbols;
+        return sym.DecimalSeparator;
+    }
+
+    public static NumberKeyListener Create(InputTypes inputTypes)
+    {
+        if ((inputTypes & InputTypes.NumberFlagDecimal) == 0)
         {
-            if ((inputTypes & InputTypes.NumberFlagDecimal) == 0)
-            {
-                // If decimal isn't allowed, we can just use the Android version
+            // If decimal isn't allowed, we can just use the Android version
 #pragma warning disable 0618
-                return DigitsKeyListener.GetInstance(inputTypes.HasFlag(InputTypes.NumberFlagSigned), false);
+            return DigitsKeyListener.GetInstance(inputTypes.HasFlag(InputTypes.NumberFlagSigned), false);
 #pragma warning restore 0618
-            }
+        }
 
-            // Figure out what the decimal separator is for the current locale
-            char decimalSeparator = GetDecimalSeparator();
+        // Figure out what the decimal separator is for the current locale
+        char decimalSeparator = GetDecimalSeparator();
 
-            if (decimalSeparator == '.')
-            {
-                // If it's '.', then we can just use the default Android version
+        if (decimalSeparator == '.')
+        {
+            // If it's '.', then we can just use the default Android version
 #pragma warning disable 0618
-                return DigitsKeyListener.GetInstance(inputTypes.HasFlag(InputTypes.NumberFlagSigned), true);
+            return DigitsKeyListener.GetInstance(inputTypes.HasFlag(InputTypes.NumberFlagSigned), true);
 #pragma warning restore 0618
-            }
-
-            // If decimals are enabled and the locale's decimal separator is not '.'
-            // (which is hard-coded in the Android DigitKeyListener), then use 
-            // our custom one with a configurable decimal separator
-            return GetInstance(inputTypes, decimalSeparator);
         }
 
-        public static LocalizedDigitsKeyListener GetInstance(InputTypes inputTypes, char decimalSeparator)
-        {
-            if ((inputTypes & InputTypes.NumberFlagSigned) != 0)
-            {
-                return GetInstance(inputTypes, decimalSeparator, ref s_signedCache);
-            }
+        // If decimals are enabled and the locale's decimal separator is not '.'
+        // (which is hard-coded in the Android DigitKeyListener), then use 
+        // our custom one with a configurable decimal separator
+        return GetInstance(inputTypes, decimalSeparator);
+    }
 
-            return GetInstance(inputTypes, decimalSeparator, ref s_unsignedCache);
+    public static LocalizedDigitsKeyListener GetInstance(InputTypes inputTypes, char decimalSeparator)
+    {
+        if ((inputTypes & InputTypes.NumberFlagSigned) != 0)
+        {
+            return GetInstance(inputTypes, decimalSeparator, ref s_signedCache);
         }
 
-        static LocalizedDigitsKeyListener GetInstance(InputTypes inputTypes, char decimalSeparator, ref Dictionary<char, LocalizedDigitsKeyListener> cache)
+        return GetInstance(inputTypes, decimalSeparator, ref s_unsignedCache);
+    }
+
+    static LocalizedDigitsKeyListener GetInstance(InputTypes inputTypes, char decimalSeparator, ref Dictionary<char, LocalizedDigitsKeyListener> cache)
+    {
+        if (cache == null)
         {
-            if (cache == null)
-            {
-                cache = new Dictionary<char, LocalizedDigitsKeyListener>(1);
-            }
-
-            if (!cache.ContainsKey(decimalSeparator))
-            {
-                cache.Add(decimalSeparator, new LocalizedDigitsKeyListener(inputTypes, decimalSeparator));
-            }
-
-            return cache[decimalSeparator];
+            cache = new Dictionary<char, LocalizedDigitsKeyListener>(1);
         }
 
-        protected LocalizedDigitsKeyListener(InputTypes inputTypes, char decimalSeparator)
+        if (!cache.ContainsKey(decimalSeparator))
         {
-            _decimalSeparator = decimalSeparator;
-            InputType = inputTypes;
+            cache.Add(decimalSeparator, new LocalizedDigitsKeyListener(inputTypes, decimalSeparator));
         }
 
-        public override InputTypes InputType { get; }
+        return cache[decimalSeparator];
+    }
 
-        char[] _acceptedChars;
+    protected LocalizedDigitsKeyListener(InputTypes inputTypes, char decimalSeparator)
+    {
+        _decimalSeparator = decimalSeparator;
+        InputType = inputTypes;
+    }
 
-        protected override char[] GetAcceptedChars()
+    public override InputTypes InputType { get; }
+
+    char[] _acceptedChars;
+
+    protected override char[] GetAcceptedChars()
+    {
+        if ((InputType & InputTypes.NumberFlagSigned) == 0)
         {
-            if ((InputType & InputTypes.NumberFlagSigned) == 0)
-            {
-                return _acceptedChars ??
-                       (_acceptedChars = new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', _decimalSeparator });
-            }
-
             return _acceptedChars ??
-                   (_acceptedChars = new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', SignCharacter, _decimalSeparator });
+                   (_acceptedChars = new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', _decimalSeparator });
         }
 
-        static bool IsSignChar(char c)
+        return _acceptedChars ??
+               (_acceptedChars = new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', SignCharacter, _decimalSeparator });
+    }
+
+    static bool IsSignChar(char c)
+    {
+        return c == SignCharacter;
+    }
+
+    bool IsDecimalPointChar(char c)
+    {
+        return c == _decimalSeparator;
+    }
+
+    public override ICharSequence FilterFormatted(ICharSequence source, int start, int end, ISpanned dest, int dstart,
+        int dend)
+    {
+        // Borrowed heavily from the Android source
+        ICharSequence filterFormatted = base.FilterFormatted(source, start, end, dest, dstart, dend);
+
+        if (filterFormatted != null)
         {
-            return c == SignCharacter;
+            source = filterFormatted;
+            start = 0;
+            end = filterFormatted.Length();
         }
 
-        bool IsDecimalPointChar(char c)
-        {
-            return c == _decimalSeparator;
-        }
+        int sign = -1;
+        int dec = -1;
+        int dlen = dest.Length();
 
-        public override ICharSequence FilterFormatted(ICharSequence source, int start, int end, ISpanned dest, int dstart,
-            int dend)
+        // Find out if the existing text has a sign or decimal point characters.
+        for (var i = 0; i < dstart; i++)
         {
-            // Borrowed heavily from the Android source
-            ICharSequence filterFormatted = base.FilterFormatted(source, start, end, dest, dstart, dend);
-
-            if (filterFormatted != null)
+            char c = dest.CharAt(i);
+            if (IsSignChar(c))
             {
-                source = filterFormatted;
-                start = 0;
-                end = filterFormatted.Length();
+                sign = i;
+            }
+            else if (IsDecimalPointChar(c))
+            {
+                dec = i;
+            }
+        }
+
+        for (int i = dend; i < dlen; i++)
+        {
+            char c = dest.CharAt(i);
+            if (IsSignChar(c))
+            {
+                return new Java.Lang.String(""); // Nothing can be inserted in front of a sign character.
             }
 
-            int sign = -1;
-            int dec = -1;
-            int dlen = dest.Length();
-
-            // Find out if the existing text has a sign or decimal point characters.
-            for (var i = 0; i < dstart; i++)
+            if (IsDecimalPointChar(c))
             {
-                char c = dest.CharAt(i);
-                if (IsSignChar(c))
+                dec = i;
+            }
+        }
+
+        // If it does, we must strip them out from the source.
+        // In addition, a sign character must be the very first character,
+        // and nothing can be inserted before an existing sign character.
+        // Go in reverse order so the offsets are stable.
+        SpannableStringBuilder stripped = null;
+        for (int i = end - 1; i >= start; i--)
+        {
+            char c = source.CharAt(i);
+            var strip = false;
+
+            if (IsSignChar(c))
+            {
+                if (i != start || dstart != 0)
+                {
+                    strip = true;
+                }
+                else if (sign >= 0)
+                {
+                    strip = true;
+                }
+                else
                 {
                     sign = i;
                 }
-                else if (IsDecimalPointChar(c))
+            }
+            else if (IsDecimalPointChar(c))
+            {
+                if (dec >= 0)
+                {
+                    strip = true;
+                }
+                else
                 {
                     dec = i;
                 }
             }
 
-            for (int i = dend; i < dlen; i++)
+            if (strip)
             {
-                char c = dest.CharAt(i);
-                if (IsSignChar(c))
+                if (end == start + 1)
                 {
-                    return new String(""); // Nothing can be inserted in front of a sign character.
+                    return new Java.Lang.String(""); // Only one character, and it was stripped.
                 }
-
-                if (IsDecimalPointChar(c))
+                if (stripped == null)
                 {
-                    dec = i;
+                    stripped = new SpannableStringBuilder(source, start, end);
                 }
+                stripped.Delete(i - start, i + 1 - start);
             }
-
-            // If it does, we must strip them out from the source.
-            // In addition, a sign character must be the very first character,
-            // and nothing can be inserted before an existing sign character.
-            // Go in reverse order so the offsets are stable.
-            SpannableStringBuilder stripped = null;
-            for (int i = end - 1; i >= start; i--)
-            {
-                char c = source.CharAt(i);
-                var strip = false;
-
-                if (IsSignChar(c))
-                {
-                    if (i != start || dstart != 0)
-                    {
-                        strip = true;
-                    }
-                    else if (sign >= 0)
-                    {
-                        strip = true;
-                    }
-                    else
-                    {
-                        sign = i;
-                    }
-                }
-                else if (IsDecimalPointChar(c))
-                {
-                    if (dec >= 0)
-                    {
-                        strip = true;
-                    }
-                    else
-                    {
-                        dec = i;
-                    }
-                }
-
-                if (strip)
-                {
-                    if (end == start + 1)
-                    {
-                        return new String(""); // Only one character, and it was stripped.
-                    }
-                    if (stripped == null)
-                    {
-                        stripped = new SpannableStringBuilder(source, start, end);
-                    }
-                    stripped.Delete(i - start, i + 1 - start);
-                }
-            }
-
-            return stripped ?? filterFormatted;
         }
+
+        return stripped ?? filterFormatted;
     }
 }
