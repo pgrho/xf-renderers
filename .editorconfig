@@ -1,0 +1,11 @@
+[*]
+indent_style = space
+
+[*.{props,targets,csproj}]
+indent_size = 2
+insert_final_newline = false
+
+[*.{cs,csx,razor}]
+indent_size = 4
+insert_final_newline = true
+charset = utf-8-bom
