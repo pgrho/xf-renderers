@@ -14,7 +14,6 @@ using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
 using Color = Xamarin.Forms.Color;
 using Entry = Xamarin.Forms.Entry;
 using VisualElement = Xamarin.Forms.VisualElement;
-using Android = Android;
 
 namespace Shipwreck.XamarinFormsRenderers.Android;
 
@@ -150,9 +149,19 @@ public abstract partial class EntryRendererBase<TControl> : ViewRenderer<Entry, 
             // Post this to the main looper queue so it doesn't happen until the other focus stuff has resolved
             // Otherwise, ShowKeyboard will be called before this control is truly focused, and we will potentially
             // be displaying the wrong keyboard
-            EditText?.PostShowKeyboard();
+            PostShowKeyboard(EditText);
         }
     }
+
+    #region Keyboard
+
+    protected virtual void ShowKeyboard(EditText editText)
+        => editText?.ShowKeyboard();
+
+    protected virtual void PostShowKeyboard(EditText editText)
+        => editText?.PostShowKeyboard();
+
+    #endregion Keyboard
 
     protected override void OnElementChanged(ElementChangedEventArgs<Entry> e)
     {
@@ -236,7 +245,7 @@ public abstract partial class EntryRendererBase<TControl> : ViewRenderer<Entry, 
         EditText.Hint = Element.Placeholder;
         if (EditText.IsFocused)
         {
-            EditText.ShowKeyboard();
+            ShowKeyboard(EditText);
         }
     }
 
@@ -588,7 +597,7 @@ public abstract partial class EntryRendererBase<TControl> : ViewRenderer<Entry, 
         if (EditText.IsFocused)
         {
             EditText.SetSelection(EditText.Text.Length);
-            EditText.ShowKeyboard();
+            ShowKeyboard(EditText);
         }
     }
 

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Shipwreck.XamarinFormsRenderers;
+﻿namespace Shipwreck.XamarinFormsRenderers;
 
 public class ExtendedEntry : Entry
 {
@@ -13,7 +7,7 @@ public class ExtendedEntry : Entry
     public static readonly BindableProperty SelectAllOnFocusProperty
         = BindableProperty.Create(
             nameof(SelectAllOnFocus), typeof(bool), typeof(ExtendedEntry),
-            defaultValue: true);
+            defaultValue: false);
 
     public bool SelectAllOnFocus
     {
@@ -23,4 +17,18 @@ public class ExtendedEntry : Entry
 
     #endregion SelectAllOnFocus
 
+    #region IsSoftwareKeyboardEnabled
+
+    public static readonly BindableProperty IsSoftwareKeyboardEnabledProperty
+        = BindableProperty.Create(
+            nameof(IsSoftwareKeyboardEnabled), typeof(bool), typeof(ExtendedEntry),
+            defaultValue: true);
+
+    public bool IsSoftwareKeyboardEnabled
+    {
+        get => (bool)GetValue(IsSoftwareKeyboardEnabledProperty);
+        set => SetValue(IsSoftwareKeyboardEnabledProperty, value);
+    }
+
+    #endregion IsSoftwareKeyboardEnabled
 }
