@@ -8,6 +8,19 @@
 
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2545" />
+    <Compile Remove="iOS\**\*.cs" />
+    <Compile Remove="Android\**\*.cs" />
+    <None Include="iOS\**\*.cs" />
+    <None Include="Android\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('MonoAndroid'))">
+    <None Remove="Android\**\*.cs" />
+    <Compile Include="Android\**\*.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('Xamarin.iOS'))">
+    <None Remove="iOS\**\*.cs" />
+    <Compile Include="iOS\**\*.cs" />
   </ItemGroup>
 
 </Project>
