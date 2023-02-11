@@ -2,6 +2,10 @@
 
 Xamarin.Forms Renderers that are fully copied from Xamarin.Forms 5.0.0 for further extensions.
 
+## Package
+
+- [NuGet Shipwreck.XamarinFormsRenderers](https://www.nuget.org/packages/Shipwreck.XamarinFormsRenderers/)
+
 ## Copied Renderers
 
 |Control|Android|iOS|UWP|
