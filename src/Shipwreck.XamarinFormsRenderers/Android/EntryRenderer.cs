@@ -315,9 +315,18 @@ public abstract partial class EntryRendererBase<TControl> : ViewRenderer<Entry, 
             case nameof(Xamarin.Forms.PlatformConfiguration.AndroidSpecific.Entry.ImeOptions):
                 UpdateImeOptions();
                 break;
+
+            case nameof(Element.IsFocused):
+                OnIsFocusedChanged();
+                break;
         }
 
         base.OnElementPropertyChanged(sender, e);
+    }
+
+    protected virtual void OnIsFocusedChanged()
+    {
+        UpdateClearBtnOnFocusChanged(Element.IsFocused);
     }
 
     protected virtual NumberKeyListener GetDigitsKeyListener(InputTypes inputTypes)
@@ -484,7 +493,7 @@ public abstract partial class EntryRendererBase<TControl> : ViewRenderer<Entry, 
             }
             catch (System.Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(  $"Failed to set Control.Selection from CursorPosition/SelectionLength: {ex}");
+                System.Diagnostics.Debug.WriteLine($"Failed to set Control.Selection from CursorPosition/SelectionLength: {ex}");
             }
             finally
             {
@@ -581,17 +590,15 @@ public abstract partial class EntryRendererBase<TControl> : ViewRenderer<Entry, 
             EditText.ShowKeyboard();
         }
     }
-}
 
-// Entry clear button management
-public abstract partial class EntryRendererBase<TControl>
-{
     Drawable _clearBtn;
-    internal override void OnNativeFocusChanged(bool hasFocus)
-    {
-        base.OnNativeFocusChanged(hasFocus);
-        UpdateClearBtnOnFocusChanged(hasFocus);
-    }
+
+    // HACK removed OnNativeFocusChanged due to internal.
+    //internal override void OnNativeFocusChanged(bool hasFocus)
+    //{
+    //    base.OnNativeFocusChanged(hasFocus);
+    //    UpdateClearBtnOnFocusChanged(hasFocus);
+    //}
 
     void OnAfterTextChanged(IEditable s)
     {
