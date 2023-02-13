@@ -1,8 +1,11 @@
 ﻿using System.ComponentModel;
 using Android.Content;
+using Android.Views;
+using Android.Views.InputMethods;
 using Android.Widget;
 using Shipwreck.XamarinFormsRenderers;
 using Shipwreck.XamarinFormsRenderers.Android;
+using Xamarin.Forms.Platform.Android;
 
 [assembly: ExportRenderer(typeof(ExtendedEntry), typeof(ExtendedEntryRenderer))]
 namespace Shipwreck.XamarinFormsRenderers.Android;
@@ -49,6 +52,9 @@ public class ExtendedEntryRenderer : EntryRenderer
             EditText?.HideKeyboard();
         }
     }
+
+    protected override global::Android.Views.View SearchNextFocus(TextView v, ImeAction imeAction)
+        => Element.ReturnType == ReturnType.Next ? FocusSearch(v, FocusSearchDirection.Forward) : v;
 
     protected virtual void UpdateSelectAllOnFocus()
     {

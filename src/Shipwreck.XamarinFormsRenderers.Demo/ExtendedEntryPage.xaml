@@ -9,14 +9,33 @@
     Title="ExtendedEntry">
     <ScrollView>
         <StackLayout>
+            <StackLayout.Resources>
+                <Style
+                    TargetType="{x:Type xfr:ExtendedEntry}">
+                    <Setter
+                        Property="FontSize"
+                        Value="Large" />
+                    <Setter
+                        Property="IsSoftwareKeyboardEnabled"
+                        Value="{Binding IsSoftwareKeyboardEnabled}" />
+                    <Setter
+                        Property="SelectAllOnFocus"
+                        Value="{Binding SelectAllOnFocus}" />
+                    <Setter
+                        Property="ReturnType"
+                        Value="{Binding ReturnType}" />
+                </Style>
+            </StackLayout.Resources>
             <xfr:ExtendedEntry
                 x:Name="target"
                 FontSize="Large"
                 Text="{Binding Text}"
                 Placeholder="{Binding Placeholder}"
-                IsSoftwareKeyboardEnabled="{Binding IsSoftwareKeyboardEnabled}"
-                SelectAllOnFocus="{Binding SelectAllOnFocus}"
                 ReturnCommand="{Binding PopCommand}" />
+            <xfr:ExtendedEntry
+                Placeholder="sub1" />
+            <xfr:ExtendedEntry
+                Placeholder="sub2" />
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition
@@ -24,6 +43,7 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
@@ -55,6 +75,15 @@
                     Grid.Row="3"
                     Grid.Column="1"
                     IsToggled="{Binding SelectAllOnFocus}" />
+
+                <Label
+                    Grid.Row="4"
+                    Text="ReturnType" />
+                <Picker
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    ItemsSource="{Binding ReturnTypes}"
+                    SelectedItem="{Binding ReturnType}" />
             </Grid>
 
             <Button

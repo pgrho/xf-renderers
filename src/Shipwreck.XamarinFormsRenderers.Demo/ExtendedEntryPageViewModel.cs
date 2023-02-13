@@ -1,6 +1,4 @@
-﻿using Xamarin.Forms;
-
-namespace Shipwreck.XamarinFormsRenderers.Demo;
+﻿namespace Shipwreck.XamarinFormsRenderers.Demo;
 
 public sealed class ExtendedEntryPageViewModel : PageViewModel
 {
@@ -8,6 +6,7 @@ public sealed class ExtendedEntryPageViewModel : PageViewModel
         : base(page)
     {
     }
+
     #region Text
 
     private string _Text = "abcdefg";
@@ -18,7 +17,8 @@ public sealed class ExtendedEntryPageViewModel : PageViewModel
         set => SetProperty(ref _Text, value);
     }
 
-    #endregion
+    #endregion Text
+
     #region Placeholder
 
     private string _Placeholder = "placeholder";
@@ -29,7 +29,7 @@ public sealed class ExtendedEntryPageViewModel : PageViewModel
         set => SetProperty(ref _Placeholder, value);
     }
 
-    #endregion
+    #endregion Placeholder
 
     #region IsSoftwareKeyboardEnabled
 
@@ -41,7 +41,7 @@ public sealed class ExtendedEntryPageViewModel : PageViewModel
         set => SetProperty(ref _IsSoftwareKeyboardEnabled, value);
     }
 
-    #endregion
+    #endregion IsSoftwareKeyboardEnabled
 
     #region SelectAllOnFocus
 
@@ -53,11 +53,24 @@ public sealed class ExtendedEntryPageViewModel : PageViewModel
         set => SetProperty(ref _SelectAllOnFocus, value);
     }
 
-    #endregion
+    #endregion SelectAllOnFocus
+
+    #region ReturnType
+
+    private ReturnType _ReturnType;
+
+    public ReturnType ReturnType
+    {
+        get => _ReturnType;
+        set => SetProperty(ref _ReturnType, value);
+    }
+
+    public ReturnType[] ReturnTypes { get; } = { ReturnType.Default, ReturnType.Done, ReturnType.Go, ReturnType.Next, ReturnType.Search, ReturnType.Send };
+
+    #endregion SelectAllOnFocus
 
     private Command _FocusCommand;
+
     public Command FocusCommand
         => _FocusCommand ??= new(() => (Page as ExtendedEntryPage)?.FocusTarget());
-
-
 }

@@ -43,34 +43,51 @@ public abstract partial class EntryRendererBase<TControl> : ViewRenderer<Entry, 
     }
 
     bool TextView.IOnEditorActionListener.OnEditorAction(TextView v, ImeAction actionId, KeyEvent e)
+        => OnEditorAction(v, actionId, e, _currentInputImeFlag);
+
+    protected virtual bool OnEditorAction(TextView v, ImeAction actionId, KeyEvent e, ImeAction imeAction)
     {
         // Fire Completed and dismiss keyboard for hardware / physical keyboards
-        if (actionId == ImeAction.Done || actionId == _currentInputImeFlag || (actionId == ImeAction.ImeNull && e.KeyCode == Keycode.Enter && e.Action == KeyEventActions.Up))
+        if (actionId == ImeAction.Done || actionId == imeAction || (actionId == ImeAction.ImeNull && e.KeyCode == Keycode.Enter && e.Action == KeyEventActions.Up))
         {
-            global::Android.Views.View nextFocus = null;
-            if (_currentInputImeFlag == ImeAction.Next)
-            {
-                nextFocus = FocusSearch(v, FocusSearchDirection.Forward);
-            }
+            var nextFocus = SearchNextFocus(v, imeAction);
 
-            if (nextFocus != null)
+            if (nextFocus != v)
             {
-                nextFocus.RequestFocus();
-                if (!nextFocus.OnCheckIsTextEditor())
+                if (nextFocus != null)
                 {
+                    FocusNext(v, nextFocus);
+                }
+                else
+                {
+                    EditText.ClearFocus();
                     v.HideKeyboard();
                 }
-            }
-            else
-            {
-                EditText.ClearFocus();
-                v.HideKeyboard();
             }
 
             ((IEntryController)Element).SendCompleted();
         }
 
         return true;
+    }
+
+
+    protected virtual global::Android.Views.View SearchNextFocus(TextView v, ImeAction imeAction)
+    {
+        if (imeAction == ImeAction.Next)
+        {
+            return FocusSearch(v, FocusSearchDirection.Forward);
+        }
+
+        return null;
+    }
+    protected virtual void FocusNext(TextView currentView, global::Android.Views.View nextFocus)
+    {
+        nextFocus.RequestFocus();
+        if (!nextFocus.OnCheckIsTextEditor())
+        {
+            currentView.HideKeyboard();
+        }
     }
 
     void ITextWatcher.AfterTextChanged(IEditable s)
@@ -126,6 +143,7 @@ public abstract partial class EntryRendererBase<TControl> : ViewRenderer<Entry, 
             EditText.AddTextChangedListener(this);
             EditText.SetOnEditorActionListener(this);
 
+            // IFormsEditText
             if (EditText is CustomEditText formsEditText)
             {
                 formsEditText.OnKeyboardBackPressed += OnKeyboardBackPressed;
@@ -176,6 +194,7 @@ public abstract partial class EntryRendererBase<TControl> : ViewRenderer<Entry, 
                 EditText.RemoveTextChangedListener(this);
                 EditText.SetOnEditorActionListener(null);
 
+                // IFormsEditText
                 if (EditText is CustomEditText formsEditContext)
                 {
                     formsEditContext.OnKeyboardBackPressed -= OnKeyboardBackPressed;
